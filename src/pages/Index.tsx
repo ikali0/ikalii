@@ -6,7 +6,7 @@ import { articles } from "@/data/articles";
 const Index = () => {
   const featuredArticles = articles.slice(0, 6);
   return <div className="min-h-screen bg-background animate-fade-in">
-      <Header className="bg-card" />
+      <Header />
       
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
