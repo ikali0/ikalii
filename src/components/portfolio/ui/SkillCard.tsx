@@ -37,8 +37,8 @@ const SkillCard: React.FC<Props> = ({ icon: Icon, color, title, items }) => {
       </div>
       <h3 className="text-xl font-bold text-slate-100 mb-3">{title}</h3>
       <ul className="space-y-2 text-slate-400 text-sm">
-        {items.map((item, idx) => (
-          <li key={idx} className="flex items-start gap-2">
+        {items.map((item) => (
+          <li key={item} className="flex items-start gap-2">
             <div className={`mt-1.5 min-w-[6px] h-1.5 rounded-full ${dotClass}`} />
             <span className="leading-snug">{item}</span>
           </li>

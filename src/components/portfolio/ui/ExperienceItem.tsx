@@ -52,8 +52,8 @@ const ExperienceItem: React.FC<Props> = ({ role, company, period, items, color, 
         {/* Right Side (Desktop) / Bottom (Mobile) */}
         <div className="md:w-[45%] pl-4 md:pl-0 pt-2 md:pt-0">
           <ul className="space-y-1.5 text-slate-400 text-sm list-disc pl-4 marker:text-slate-600">
-            {items.map((item, i) => (
-              <li key={i} className="leading-snug">{item}</li>
+            {items.map((item) => (
+              <li key={item} className="leading-snug">{item}</li>
             ))}
           </ul>
         </div>
