@@ -194,99 +194,121 @@ All colors MUST be HSL.
 
   /* Animation keyframes */
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes scaleIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
   }
 
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-out;
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(2deg); }
   }
 
-  .animate-slide-up {
-    animation: slideUp 0.6s ease-out;
+  @keyframes float-delayed {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(-2deg); }
   }
 
-  .animate-slide-down {
-    animation: slideDown 0.6s ease-out;
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
 
-  .animate-scale-in {
-    animation: scaleIn 0.5s ease-out;
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px 0 hsl(187 94% 43% / 0.3); }
+    50% { box-shadow: 0 0 40px 10px hsl(187 94% 43% / 0.5); }
+  }
+
+  @keyframes rotate-3d {
+    0% { transform: perspective(1000px) rotateY(-5deg) rotateX(5deg); }
+    50% { transform: perspective(1000px) rotateY(5deg) rotateX(-5deg); }
+    100% { transform: perspective(1000px) rotateY(-5deg) rotateX(5deg); }
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+  .animate-slide-up { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .animate-slide-down { animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .animate-scale-in { animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .animate-float { animation: float 6s ease-in-out infinite; }
+  .animate-float-delayed { animation: float-delayed 7s ease-in-out infinite; }
+  .animate-shimmer { 
+    background: linear-gradient(90deg, transparent, hsl(187 94% 43% / 0.3), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+  .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+  .animate-rotate-3d { animation: rotate-3d 8s ease-in-out infinite; }
+  .animate-gradient { 
+    background-size: 200% 200%;
+    animation: gradient-shift 4s ease infinite;
+  }
+  .animate-typing { animation: typing 2s steps(20) forwards; }
+  .animate-blink { animation: blink 1s step-end infinite; }
+
+  /* 3D Transform utilities */
+  .perspective-1000 { perspective: 1000px; }
+  .perspective-2000 { perspective: 2000px; }
+  .preserve-3d { transform-style: preserve-3d; }
+  .backface-hidden { backface-visibility: hidden; }
+  
+  .hover-3d {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hover-3d:hover {
+    transform: perspective(1000px) rotateX(-5deg) rotateY(5deg) translateZ(20px);
+  }
+
+  /* Glassmorphism */
+  .glass {
+    background: hsl(210 40% 96% / 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(210 40% 96% / 0.2);
+  }
+
+  .glass-dark {
+    background: hsl(220 13% 5% / 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(220 13% 26% / 0.3);
   }
 
   /* Stagger animations */
-  .stagger-1 {
-    animation-delay: 0.1s;
-    opacity: 0;
-    animation-fill-mode: forwards;
-  }
-
-  .stagger-2 {
-    animation-delay: 0.2s;
-    opacity: 0;
-    animation-fill-mode: forwards;
-  }
-
-  .stagger-3 {
-    animation-delay: 0.3s;
-    opacity: 0;
-    animation-fill-mode: forwards;
-  }
-
-  .stagger-4 {
-    animation-delay: 0.4s;
-    opacity: 0;
-    animation-fill-mode: forwards;
-  }
-
-  .stagger-5 {
-    animation-delay: 0.5s;
-    opacity: 0;
-    animation-fill-mode: forwards;
-  }
-
-  .stagger-6 {
-    animation-delay: 0.6s;
-    opacity: 0;
-    animation-fill-mode: forwards;
-  }
+  .stagger-1 { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; }
+  .stagger-2 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
+  .stagger-3 { animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards; }
+  .stagger-4 { animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards; }
+  .stagger-5 { animation-delay: 0.5s; opacity: 0; animation-fill-mode: forwards; }
+  .stagger-6 { animation-delay: 0.6s; opacity: 0; animation-fill-mode: forwards; }
+  .stagger-7 { animation-delay: 0.7s; opacity: 0; animation-fill-mode: forwards; }
+  .stagger-8 { animation-delay: 0.8s; opacity: 0; animation-fill-mode: forwards; }
 
   .tag-financing {
     @apply bg-[hsl(var(--tag-financing))] text-primary;
