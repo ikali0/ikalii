@@ -1,4 +1,6 @@
-const IntroSection = () => {
+import { memo } from "react";
+
+const IntroSection = memo(() => {
   return (
     <section className="max-w-4xl mx-auto py-12 md:py-16 px-4 animate-fade-in">
       <div className="text-center space-y-6">
@@ -13,6 +15,8 @@ const IntroSection = () => {
       </div>
     </section>
   );
-};
+});
+
+IntroSection.displayName = "IntroSection";
 
 export default IntroSection;
