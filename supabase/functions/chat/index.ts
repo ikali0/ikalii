@@ -1,6 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient, SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -13,24 +13,89 @@ type ClientMessage = {
   content: string;
 };
 
-// Simple in-memory rate limiting (resets on function cold start)
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+type RateLimitRecord = {
+  id: string;
+  request_count: number;
+  window_start: string;
+};
 
-function checkRateLimit(identifier: string, maxRequests = 50, windowMs = 3600000): boolean {
-  const now = Date.now();
-  const limit = rateLimitMap.get(identifier);
+const MAX_REQUESTS = 50;
+const WINDOW_MS = 3600000; // 1 hour in milliseconds
 
-  if (!limit || now > limit.resetTime) {
-    rateLimitMap.set(identifier, { count: 1, resetTime: now + windowMs });
-    return true;
+async function checkRateLimit(
+  supabase: SupabaseClient,
+  userId: string,
+  endpoint: string
+): Promise<{ allowed: boolean; remaining: number }> {
+  const now = new Date();
+  const windowStart = new Date(now.getTime() - WINDOW_MS);
+
+  // Try to get existing rate limit record
+  const { data: existing, error: selectError } = await supabase
+    .from("rate_limits")
+    .select("id, request_count, window_start")
+    .eq("user_id", userId)
+    .eq("endpoint", endpoint)
+    .maybeSingle();
+
+  if (selectError) {
+    console.error("Rate limit select error:", selectError);
+    // Allow request on error to avoid blocking users due to DB issues
+    return { allowed: true, remaining: MAX_REQUESTS };
   }
 
-  if (limit.count >= maxRequests) {
-    return false;
+  const record = existing as RateLimitRecord | null;
+
+  if (!record) {
+    // No record exists, create one
+    const { error: insertError } = await supabase.from("rate_limits").insert({
+      user_id: userId,
+      endpoint,
+      request_count: 1,
+      window_start: now.toISOString(),
+    });
+
+    if (insertError) {
+      console.error("Rate limit insert error:", insertError);
+    }
+    return { allowed: true, remaining: MAX_REQUESTS - 1 };
   }
 
-  limit.count++;
-  return true;
+  const existingWindowStart = new Date(record.window_start);
+
+  // Check if window has expired
+  if (existingWindowStart < windowStart) {
+    // Reset the window
+    const { error: updateError } = await supabase
+      .from("rate_limits")
+      .update({
+        request_count: 1,
+        window_start: now.toISOString(),
+      })
+      .eq("id", record.id);
+
+    if (updateError) {
+      console.error("Rate limit reset error:", updateError);
+    }
+    return { allowed: true, remaining: MAX_REQUESTS - 1 };
+  }
+
+  // Window still active, check count
+  if (record.request_count >= MAX_REQUESTS) {
+    return { allowed: false, remaining: 0 };
+  }
+
+  // Increment counter
+  const { error: incrementError } = await supabase
+    .from("rate_limits")
+    .update({ request_count: record.request_count + 1 })
+    .eq("id", record.id);
+
+  if (incrementError) {
+    console.error("Rate limit increment error:", incrementError);
+  }
+
+  return { allowed: true, remaining: MAX_REQUESTS - record.request_count - 1 };
 }
 
 async function verifyAuth(req: Request): Promise<{ valid: boolean; userId?: string; error?: string }> {
@@ -82,13 +147,27 @@ serve(async (req) => {
       });
     }
 
-    // Check rate limit
-    if (!checkRateLimit(authResult.userId)) {
+    // Initialize Supabase client for rate limiting
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Check rate limit using database
+    const rateLimitResult = await checkRateLimit(supabase, authResult.userId, "chat");
+    if (!rateLimitResult.allowed) {
       console.warn("Rate limit exceeded for user:", authResult.userId);
-      return new Response(JSON.stringify({ error: "Rate limit exceeded. Maximum 50 requests per hour." }), {
-        status: 429,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "Rate limit exceeded. Maximum 50 requests per hour." }),
+        {
+          status: 429,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+            "X-RateLimit-Limit": String(MAX_REQUESTS),
+            "X-RateLimit-Remaining": "0",
+          },
+        }
+      );
     }
 
     const body = await req.json().catch(() => null);
@@ -179,6 +258,8 @@ serve(async (req) => {
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache",
         Connection: "keep-alive",
+        "X-RateLimit-Limit": String(MAX_REQUESTS),
+        "X-RateLimit-Remaining": String(rateLimitResult.remaining),
       },
     });
   } catch (e) {
