@@ -12,10 +12,14 @@ type Props = {
 
 const navItems: NavItem[] = [
   { name: "About", id: "about" },
-  { name: "Work", id: "expertise" },
+  { name: "Expertise", id: "expertise" },
   { name: "Experience", id: "experience" },
+  { name: "Qualifications", id: "qualifications" },
   { name: "Projects", id: "projects" },
+  { name: "Articles", id: "articles" },
 ];
+
+const chatLink = { name: "AI Chat", href: "/chat" };
 
 const Navbar: React.FC<Props> = ({ activeSection, scrolled, onNavigate }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,35 +89,38 @@ const Navbar: React.FC<Props> = ({ activeSection, scrolled, onNavigate }) => {
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-all duration-300 border-b",
           scrolled
-            ? "bg-slate-950/90 backdrop-blur-md border-slate-800 py-1.5 shadow-lg shadow-slate-950/40"
-            : "bg-transparent border-transparent py-2"
+            ? "bg-slate-950/90 backdrop-blur-md border-slate-800 py-2 shadow-lg shadow-slate-950/40"
+            : "bg-transparent border-transparent py-3"
         )}
       >
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-3 sm:px-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-3 sm:px-4">
           {/* Logo */}
           <button
             className={cn(
               "flex items-center gap-1.5 rounded-md",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400",
+              "focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             )}
             onClick={() => handleNavigate("home")}
             aria-label="Go to home section"
           >
             <div
               className={cn(
-                "flex h-6 w-6 items-center justify-center rounded-md",
-                "bg-gradient-to-tr from-cyan-600 to-blue-700 shadow-sm"
+                "flex h-7 w-7 items-center justify-center rounded-md",
+                "bg-gradient-to-tr from-cyan-600 to-blue-700 shadow-md shadow-blue-900/20"
               )}
             >
-              <span className="text-[10px] font-bold text-white">IK</span>
+              <span className="text-xs font-bold text-white" aria-hidden="true">
+                IK
+              </span>
             </div>
-            <span className="hidden text-xs font-semibold tracking-tight text-slate-100 sm:inline">
+            <span className="hidden text-sm font-semibold tracking-tight text-slate-100 sm:inline">
               Inga Kaltak
             </span>
           </button>
 
           {/* Desktop Links */}
-          <div className="hidden items-center gap-3 md:flex lg:gap-4">
+          <div className="hidden items-center gap-4 md:flex lg:gap-5">
             {navItems.map((link) => (
               <NavLink
                 key={link.id}
@@ -123,11 +130,22 @@ const Navbar: React.FC<Props> = ({ activeSection, scrolled, onNavigate }) => {
               />
             ))}
 
+            <a
+              href={chatLink.href}
+              className={cn(
+                "relative text-xs font-medium text-slate-400 transition-colors hover:text-cyan-400",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded"
+              )}
+            >
+              {chatLink.name}
+            </a>
+
             <button
               onClick={() => handleNavigate("contact")}
               className={cn(
-                "ml-1 rounded-full border border-cyan-500/30 px-3 py-1 text-[10px] font-semibold text-cyan-400",
-                "transition-all hover:scale-105 hover:bg-cyan-500/10 active:scale-95"
+                "ml-2 rounded-full border border-cyan-500/30 px-4 py-1.5 text-xs font-semibold text-cyan-400",
+                "transition-all hover:scale-105 hover:bg-cyan-500/10 active:scale-95",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               )}
             >
               Contact
@@ -147,9 +165,9 @@ const Navbar: React.FC<Props> = ({ activeSection, scrolled, onNavigate }) => {
             aria-controls="mobile-menu"
           >
             {isMenuOpen ? (
-              <X size={20} aria-hidden="true" />
+              <X size={22} aria-hidden="true" />
             ) : (
-              <Menu size={20} aria-hidden="true" />
+              <Menu size={22} aria-hidden="true" />
             )}
           </button>
         </div>
@@ -163,11 +181,11 @@ const Navbar: React.FC<Props> = ({ activeSection, scrolled, onNavigate }) => {
         aria-modal="true"
         aria-label="Navigation menu"
         className={cn(
-          "fixed inset-0 z-40 flex flex-col items-center justify-center gap-2 bg-slate-950/95 backdrop-blur-xl transition-all duration-300 md:hidden",
+          "fixed inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-slate-950/95 backdrop-blur-xl transition-all duration-300 md:hidden",
           isMenuOpen ? "visible opacity-100" : "pointer-events-none invisible opacity-0"
         )}
       >
-        <div className="flex w-4/5 max-w-xs flex-col items-center gap-1.5" role="menu">
+        <div className="flex w-4/5 max-w-xs flex-col items-center gap-2" role="menu">
           {navItems.map((link) => (
             <NavLink
               key={link.id}
@@ -178,11 +196,20 @@ const Navbar: React.FC<Props> = ({ activeSection, scrolled, onNavigate }) => {
             />
           ))}
 
+          <a
+            href={chatLink.href}
+            className="w-full py-2 text-center text-xl font-medium text-slate-400 transition-colors hover:text-cyan-300"
+            role="menuitem"
+          >
+            {chatLink.name}
+          </a>
+
           <button
             onClick={() => handleNavigate("contact")}
             className={cn(
-              "mt-3 w-full rounded-lg bg-cyan-600 px-5 py-2 text-sm font-bold text-white shadow-md",
-              "transition-colors hover:bg-cyan-500"
+              "mt-4 w-full rounded-lg bg-cyan-600 px-6 py-2.5 text-base font-bold text-white shadow-lg shadow-cyan-900/30",
+              "transition-colors hover:bg-cyan-500",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             )}
           >
             Contact Me

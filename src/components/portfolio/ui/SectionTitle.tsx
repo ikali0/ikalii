@@ -7,12 +7,12 @@ type Props = {
 };
 
 const SectionTitle: React.FC<Props> = ({ title, subtitle, center = true }) => (
-  <div className={`mb-6 sm:mb-8 md:mb-10 ${center ? 'text-center' : 'text-left'}`}>
-    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-100 mb-2 tracking-tight">
+  <div className={`mb-10 md:mb-16 ${center ? 'text-center' : 'text-left'}`}>
+    <h2 className="text-3xl md:text-5xl font-bold text-slate-100 mb-3 tracking-tight">
       {title}
     </h2>
     {subtitle && (
-      <p className="text-[11px] sm:text-xs text-slate-400 max-w-2xl mx-auto">{subtitle}</p>
+      <p className="text-base text-slate-400 max-w-3xl mx-auto">{subtitle}</p>
     )}
   </div>
 );

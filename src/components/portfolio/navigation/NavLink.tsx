@@ -17,10 +17,10 @@ const NavLink: React.FC<Props> = ({ id, name, activeSection, onClick, mobile = f
       aria-current={isActive ? 'true' : undefined}
       className={`
         font-medium transition-all duration-300 relative group
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-sm
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded-sm
         ${mobile
-          ? 'text-xl py-2 w-full text-center hover:text-cyan-300'
-          : 'text-[10px] sm:text-xs hover:text-cyan-400'
+          ? 'text-3xl py-3 w-full text-center hover:text-cyan-300'
+          : 'text-sm hover:text-cyan-400'
         }
         ${isActive ? 'text-cyan-400' : 'text-slate-400'}
       `}
@@ -28,7 +28,7 @@ const NavLink: React.FC<Props> = ({ id, name, activeSection, onClick, mobile = f
       {name}
       {!mobile && (
         <span 
-          className={`absolute -bottom-0.5 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full ${isActive ? 'w-full' : ''}`}
+          className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full ${isActive ? 'w-full' : ''}`}
           aria-hidden="true"
         />
       )}

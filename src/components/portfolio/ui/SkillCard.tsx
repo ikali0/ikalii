@@ -31,15 +31,15 @@ const SkillCard: React.FC<Props> = ({ icon: Icon, color, title, items }) => {
   const [textColor, bgColor, hoverBgColor, borderColor] = themeClasses.split(' ');
 
   return (
-    <div className={`bg-slate-900/50 border border-slate-800 p-4 sm:p-5 rounded-xl transition-all duration-300 group hover:-translate-y-0.5 hover:shadow-lg hover:${borderColor}`}>
-      <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center mb-3 transition-colors ${bgColor} ${hoverBgColor}`}>
-        <Icon className={textColor} size={18} />
+    <div className={`bg-slate-900/50 border border-slate-800 p-6 rounded-2xl transition-all duration-300 group hover:-translate-y-1 hover:shadow-2xl hover:${borderColor}`}>
+      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center mb-4 transition-colors ${bgColor} ${hoverBgColor}`}>
+        <Icon className={textColor} size={24} />
       </div>
-      <h3 className="text-sm sm:text-base font-bold text-slate-100 mb-2">{title}</h3>
-      <ul className="space-y-1.5 text-slate-400 text-[10px] sm:text-xs">
+      <h3 className="text-xl font-bold text-slate-100 mb-3">{title}</h3>
+      <ul className="space-y-2 text-slate-400 text-sm">
         {items.map((item) => (
-          <li key={item} className="flex items-start gap-1.5">
-            <div className={`mt-1 min-w-[4px] h-1 rounded-full ${dotClass}`} />
+          <li key={item} className="flex items-start gap-2">
+            <div className={`mt-1.5 min-w-[6px] h-1.5 rounded-full ${dotClass}`} />
             <span className="leading-snug">{item}</span>
           </li>
         ))}
