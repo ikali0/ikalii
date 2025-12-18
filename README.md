@@ -48,15 +48,6 @@ supabase/
 └── config.toml     # Supabase configuration
 ```
 
-## Development
-
-- **Lovable**: Visit [Lovable Project](https://lovable.dev/projects/7410f81b-8218-4f2d-bb32-1ba1f84eabb2)
-- **Local IDE**: Clone repo and push changes
-- **GitHub Codespaces**: Launch from repository
-
-## Deployment
-
-Open [Lovable](https://lovable.dev/projects/7410f81b-8218-4f2d-bb32-1ba1f84eabb2) and click Share → Publish.
 
 ## Security
 
