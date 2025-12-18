@@ -8,11 +8,12 @@ export type ChatMessage = {
 };
 
 export class HttpError extends Error {
-  status: number;
+  readonly status: number;
 
   constructor(status: number, message: string) {
     super(message);
     this.status = status;
+    Object.setPrototypeOf(this, HttpError.prototype); // Ensure correct inheritance
   }
 }
 
@@ -23,10 +24,16 @@ type StreamChatArgs = {
   signal?: AbortSignal;
 };
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+const CHAT_URL = (() => {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  if (!url) {
+    throw new Error("Environment variable `VITE_SUPABASE_URL` is not defined.");
+  }
+  return `${url}/functions/v1/chat`;
+})();
 
 export async function streamChat({ messages, onDelta, onDone, signal }: StreamChatArgs): Promise<void> {
-  // Get current session for auth token
+  // Retrieve current session for auth token
   const { data: sessionData } = await supabase.auth.getSession();
   const accessToken = sessionData?.session?.access_token;
 
@@ -34,7 +41,7 @@ export async function streamChat({ messages, onDelta, onDone, signal }: StreamCh
     throw new HttpError(401, "Please sign in to use the chat feature");
   }
 
-  const resp = await fetch(CHAT_URL, {
+  const response = await fetch(CHAT_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -44,93 +51,95 @@ export async function streamChat({ messages, onDelta, onDone, signal }: StreamCh
     signal,
   });
 
-  if (!resp.ok || !resp.body) {
-    const text = await resp.text().catch(() => "");
-    
-    // Parse error message from JSON if possible
-    let errorMessage = text || `Failed to start stream (${resp.status})`;
-    try {
-      const errorJson = JSON.parse(text) as { error?: string };
-      if (errorJson.error) {
-        errorMessage = errorJson.error;
+  if (!response.ok || !response.body) {
+    const rawText = await response.text().catch(() => "");
+
+    let errorMessage = `Failed to start stream (HTTP ${response.status})`;
+    if (rawText) {
+      try {
+        const errorJson = JSON.parse(rawText) as { error?: string };
+        errorMessage = errorJson.error ?? rawText;
+      } catch {
+        // Use raw text as fallback
+        errorMessage = rawText;
       }
-    } catch {
-      // Use text as-is
     }
-    
-    throw new HttpError(resp.status, errorMessage);
+
+    throw new HttpError(response.status, errorMessage);
   }
 
-  const reader = resp.body.getReader();
+  const reader = response.body.getReader();
   const decoder = new TextDecoder();
+  let buffer = "";
 
-  let textBuffer = "";
-  let streamDone = false;
+  let isStreamDone = false;
 
-  while (!streamDone) {
-    const { done, value } = await reader.read();
-    if (done) break;
+  try {
+    while (!isStreamDone) {
+      const { done, value } = await reader.read();
+      if (done) break;
 
-    textBuffer += decoder.decode(value, { stream: true });
+      buffer += decoder.decode(value, { stream: true });
 
-    let newlineIndex: number;
-    while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
-      let line = textBuffer.slice(0, newlineIndex);
-      textBuffer = textBuffer.slice(newlineIndex + 1);
+      let newlineIndex: number;
+      while ((newlineIndex = buffer.indexOf("\n")) !== -1) {
+        let line = buffer.slice(0, newlineIndex);
+        buffer = buffer.slice(newlineIndex + 1);
 
-      if (line.endsWith("\r")) line = line.slice(0, -1);
-      if (line.startsWith(":")) continue; // keepalive/comments
-      if (line.trim() === "") continue;
-      if (!line.startsWith("data: ")) continue;
-
-      const jsonStr = line.slice(6).trim();
-      if (jsonStr === "[DONE]") {
-        streamDone = true;
-        break;
-      }
-
-      try {
-        const parsed = JSON.parse(jsonStr) as {
-          choices?: Array<{ delta?: { content?: string } }>;
-        };
-        const content = parsed.choices?.[0]?.delta?.content;
-        if (typeof content === "string" && content.length > 0) {
-          onDelta(content);
+        if (line.endsWith("\r")) line = line.slice(0, -1);
+        if (line.startsWith(":") || line.trim() === "" || !line.startsWith("data: ")) {
+          continue; // Skip keep-alive comments, empty lines, or malformed lines
         }
-      } catch {
-        // JSON might be split across chunks; put it back and wait for more
-        textBuffer = line + "\n" + textBuffer;
-        break;
+
+        const jsonStr = line.slice(6).trim();
+
+        if (jsonStr === "[DONE]") {
+          isStreamDone = true;
+          break;
+        }
+
+        try {
+          const parsed = JSON.parse(jsonStr) as {
+            choices?: Array<{ delta?: { content?: string } }>;
+          };
+          const deltaContent = parsed.choices?.[0]?.delta?.content;
+
+          if (typeof deltaContent === "string" && deltaContent.length > 0) {
+            onDelta(deltaContent);
+          }
+        } catch {
+          buffer = line + "\n" + buffer; // Restore line in case of error
+          break;
+        }
       }
     }
-  }
-
-  // Final flush (best effort)
-  if (textBuffer.trim()) {
-    const lines = textBuffer.split("\n");
-    for (let rawLine of lines) {
-      if (!rawLine) continue;
-      if (rawLine.endsWith("\r")) rawLine = rawLine.slice(0, -1);
-      if (rawLine.startsWith(":")) continue;
-      if (rawLine.trim() === "") continue;
-      if (!rawLine.startsWith("data: ")) continue;
-
-      const jsonStr = rawLine.slice(6).trim();
-      if (jsonStr === "[DONE]") continue;
-
-      try {
-        const parsed = JSON.parse(jsonStr) as {
-          choices?: Array<{ delta?: { content?: string } }>;
-        };
-        const content = parsed.choices?.[0]?.delta?.content;
-        if (typeof content === "string" && content.length > 0) {
-          onDelta(content);
+  } finally {
+    // Final flush for the buffer and trigger onDone
+    if (!isStreamDone) {
+      for (const line of buffer.split("\n")) {
+        if (line.startsWith(":") || line.trim() === "" || !line.startsWith("data: ")) {
+          continue;
         }
-      } catch {
-        // ignore leftovers
+
+        const jsonStr = line.slice(6).trim();
+        if (jsonStr === "[DONE]") {
+          break;
+        }
+
+        try {
+          const parsed = JSON.parse(jsonStr) as {
+            choices?: Array<{ delta?: { content?: string } }>;
+          };
+          const deltaContent = parsed.choices?.[0]?.delta?.content;
+
+          if (typeof deltaContent === "string" && deltaContent.length > 0) {
+            onDelta(deltaContent);
+          }
+        } catch {
+          // Ignore leftover parsing errors
+        }
       }
     }
+    onDone();
   }
-
-  onDone();
 }
