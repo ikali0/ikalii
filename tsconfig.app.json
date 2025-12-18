@@ -1,25 +1,104 @@
 {
+  "files": [],
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
   "compilerOptions": {
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleDetection": "force",
-    "moduleResolution": "bundler",
-    "noEmit": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
+    "noImplicitAny": true,
+    "noUnusedParameters": true,
     "skipLibCheck": true,
-    "strict": true,
+    "allowJs": true,
+    "noUnusedLocals": true,
     "strictNullChecks": true,
-    "target": "ES2020",
-    "useDefineForClassFields": true
+    "strict": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true
   },
-  "include": ["src"]
+  "useEffect": {
+    "data": {
+      "subscription": "supabase.auth.onAuthStateChange"
+    },
+    "setUser": "session?.user ?? null",
+    "setIsAuthLoading": "false",
+    "supabase.auth.getSession": {
+      "then": {
+        "data": {
+          "session": "setUser"
+        }
+      },
+      "catch": {
+        "err": "console.error",
+        "setIsAuthLoading": "false"
+      }
+    },
+    "return": {
+      "subscription": "unsubscribe"
+    }
+  },
+  "handleSubmit": {
+    "params": ["e: React.FormEvent"],
+    "body": [
+      "e.preventDefault()",
+      "setIsSubmitting(true)",
+      "setErrors({})",
+      "const result = contactSchema.safeParse(formData)",
+      {
+        "if": "!result.success",
+        "then": [
+          {
+            "const": "fieldErrors: FormErrors = {}"
+          },
+          {
+            "forEach": {
+              "array": "result.error.errors",
+              "item": "err",
+              "body": [
+                {
+                  "const": "field = err.path[0] as keyof ContactFormData"
+                },
+                {
+                  "if": "!fieldErrors[field]",
+                  "then": [
+                    "fieldErrors[field] = err.message",
+                    "setErrors(fieldErrors)",
+                    "setIsSubmitting(false)",
+                    "toast.error('Please fix the errors below')",
+                    "return"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "try": {
+          "body": [
+            {
+              "const": "response = await fetch('/api/send-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) })"
+            },
+            {
+              "if": "!response.ok",
+              "then": [
+                {
+                  "const": "error = await response.text().catch(() => 'Failed to send email')"
+                },
+                {
+                  "throw": "new Error(error)"
+                }
+              ]
+            },
+            "toast.success(\"Message sent! We'll get back to you soon.\")",
+            "setFormData({ name: '', email: '', subject: '', message: '' })"
+          ],
+          "catch": {
+            "err": "console.error(err); const message = err instanceof Error ? err.message : 'Failed to send message'; toast.error(message);"
+          },
+          "finally": "setIsSubmitting(false)"
+        }
+      }
+    ]
+  }
 }
