@@ -43,8 +43,9 @@ const Header = () => {
 
   const navItems = [
     { label: "Home", href: "/" },
-    { label: "Articles", href: "/blog#articles" },
-    { label: "About", href: "/about" },
+    { label: "Tech", href: "/tech" },
+    { label: "Random", href: "/random" },
+    { label: "Projects", href: "/projects" },
     { label: "AI Chat", href: "/chat" },
   ];
 

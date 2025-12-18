@@ -14,10 +14,9 @@ import Portfolio from "./pages/Portfolio";
 // Non-critical pages - lazy loaded for code splitting
 const Index = lazy(() => import("./pages/Index"));
 const Article = lazy(() => import("./pages/Article"));
-const Wellness = lazy(() => import("./pages/Wellness"));
-const Travel = lazy(() => import("./pages/Travel"));
-const Creativity = lazy(() => import("./pages/Creativity"));
-const Growth = lazy(() => import("./pages/Growth"));
+const Tech = lazy(() => import("./pages/Tech"));
+const Random = lazy(() => import("./pages/Random"));
+const Projects = lazy(() => import("./pages/Projects"));
 const About = lazy(() => import("./pages/About"));
 const Authors = lazy(() => import("./pages/Authors"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -47,10 +46,9 @@ const AnimatedRoutes = () => {
         <Route path="/blog" element={<PageTransition><Index /></PageTransition>} />
         <Route path="/chat" element={<PageTransition><Chat /></PageTransition>} />
         <Route path="/article/:id" element={<PageTransition><Article /></PageTransition>} />
-        <Route path="/wellness" element={<PageTransition><Wellness /></PageTransition>} />
-        <Route path="/travel" element={<PageTransition><Travel /></PageTransition>} />
-        <Route path="/creativity" element={<PageTransition><Creativity /></PageTransition>} />
-        <Route path="/growth" element={<PageTransition><Growth /></PageTransition>} />
+        <Route path="/tech" element={<PageTransition><Tech /></PageTransition>} />
+        <Route path="/random" element={<PageTransition><Random /></PageTransition>} />
+        <Route path="/projects" element={<PageTransition><Projects /></PageTransition>} />
         <Route path="/about" element={<PageTransition><About /></PageTransition>} />
         <Route path="/authors" element={<PageTransition><Authors /></PageTransition>} />
         <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
