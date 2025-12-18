@@ -28,23 +28,30 @@ export function useFeatureFlags() {
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUserId(data.user?.id ?? null);
-    });
+    supabase.auth.getUser()
+      .then(({ data }) => {
+        setUserId(data.user?.id ?? null);
+      })
+      .catch((err) => {
+        console.error('Failed to get user:', err);
+        setUserId(null);
+      });
   }, []);
 
   const { data: flags, isLoading, error } = useQuery({
-    queryKey: ['feature-flags'],
+    queryKey: ['feature-flags', userId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('feature_flags')
         .select('*');
       
-      if (error) throw error;
-      return data as FeatureFlag[];
+      if (error) throw new Error(error.message);
+      return (data ?? []) as FeatureFlag[];
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
     gcTime: 1000 * 60 * 10,
+    enabled: !!userId, // Only fetch if we have a user ID
+    retry: 1,
   });
 
   const isEnabled = (flagName: string): boolean => {
