@@ -66,7 +66,6 @@ const Index = () => {
             <form 
               className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" 
               onSubmit={(e) => e.preventDefault()}
-              role="form"
               aria-label="Newsletter subscription form"
             >
               <input

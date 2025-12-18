@@ -4,7 +4,7 @@ const Footer = memo(() => {
   return (
     <footer className="border-t border-slate-800 mt-16 bg-slate-900/50" role="contentinfo">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <nav aria-label="Footer navigation" className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8" role="navigation" aria-label="Footer navigation">
           <div>
             <h3 className="font-semibold mb-4 text-slate-100">Explore</h3>
             <ul className="space-y-2 text-sm text-slate-400">
@@ -80,7 +80,7 @@ const Footer = memo(() => {
               </li>
             </ul>
           </div>
-        </nav>
+        </div>
         <div className="pt-8 border-t border-slate-800 text-center text-sm text-slate-500">
           <p>© 2025 Perspective. All rights reserved.</p>
         </div>
