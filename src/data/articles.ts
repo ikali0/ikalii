@@ -257,6 +257,129 @@ export const articles: Article[] = [
     },
     tags: ["minimalism", "intentional living", "simplicity", "personal growth"],
   },
+  {
+    id: "TECH001",
+    title: "Navigating NIST AI RMF: A Practical Implementation Guide",
+    subtitle: "From framework to production-ready compliance",
+    category: "Tech",
+    date: "Mar 20, 2025",
+    readTime: "12 min",
+    image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1920&q=80",
+    author: {
+      name: "Inga Kaltak",
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80",
+      bio: "AI Policy Researcher & Applied AI Engineer",
+    },
+    content: {
+      introduction: "The NIST AI Risk Management Framework provides a structured approach to managing AI risks, but translating its principles into actionable implementation remains a challenge for many organizations. This guide bridges the gap between framework theory and practical deployment.",
+      sections: [
+        {
+          heading: "Understanding the Four Core Functions",
+          content: "NIST AI RMF is built on four functions: Govern, Map, Measure, and Manage. Govern establishes the organizational culture and processes for AI risk management. Map identifies and documents AI system contexts and potential impacts. Measure assesses and tracks identified risks. Manage prioritizes and responds to risks. Each function requires specific tooling, documentation, and stakeholder alignment.",
+        },
+        {
+          heading: "Building Your AI Inventory",
+          content: "Before you can manage AI risk, you need visibility into your AI systems. Create a comprehensive inventory documenting each AI component: its purpose, training data sources, model architecture, deployment environment, and downstream dependencies. This inventory becomes the foundation for all subsequent risk assessments and forms the basis for your organization's AI governance posture.",
+        },
+        {
+          heading: "Implementing Continuous Monitoring",
+          content: "Risk management isn't a one-time assessment—it's an ongoing process. Implement monitoring pipelines that track model performance, detect drift, and flag anomalies. Integrate these signals into your incident response workflows. Automated alerting ensures emerging risks are caught before they become compliance violations or operational failures.",
+        },
+        {
+          heading: "Documentation and Audit Trails",
+          content: "Federal compliance requires demonstrable adherence to frameworks. Maintain detailed documentation of risk assessments, mitigation decisions, and control implementations. Version control your AI models and their associated metadata. When auditors come knocking, your documentation should tell a clear story of responsible AI governance.",
+        },
+        {
+          heading: "Cross-Functional Alignment",
+          content: "AI risk management spans engineering, legal, compliance, and business teams. Establish clear roles and responsibilities through RACI matrices. Regular cross-functional reviews ensure that technical implementations align with policy requirements and business objectives. The most robust AI governance programs are those where every stakeholder understands their role.",
+        },
+      ],
+      conclusion: "NIST AI RMF implementation is a journey that requires sustained organizational commitment. Start with high-risk AI systems, build your processes incrementally, and iterate based on lessons learned. The organizations that treat AI governance as a competitive advantage—rather than a compliance burden—will be best positioned for the AI-driven future.",
+    },
+    tags: ["NIST", "AI governance", "compliance", "risk management", "federal"],
+  },
+  {
+    id: "TECH002",
+    title: "Building Production LLM Pipelines: Lessons from Federal Deployments",
+    subtitle: "Patterns and pitfalls from real-world implementations",
+    category: "Tech",
+    date: "Mar 18, 2025",
+    readTime: "10 min",
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1920&q=80",
+    author: {
+      name: "Inga Kaltak",
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80",
+      bio: "AI Policy Researcher & Applied AI Engineer",
+    },
+    content: {
+      introduction: "Deploying LLMs in federal environments presents unique challenges: air-gapped networks, strict data handling requirements, and demanding performance SLAs. After multiple deployments across DoD and civilian agencies, these patterns have emerged as critical for success.",
+      sections: [
+        {
+          heading: "Choosing the Right Model Architecture",
+          content: "Not every use case needs GPT-4-class capabilities. For many federal applications—document classification, entity extraction, summarization—smaller open-source models like Llama or Mistral deliver comparable results at a fraction of the cost and latency. Profile your workload thoroughly before committing to an architecture. The 40% infrastructure cost reduction we achieved came from right-sizing models to actual requirements.",
+        },
+        {
+          heading: "Prompt Engineering at Scale",
+          content: "Production prompt engineering is fundamentally different from experimentation. Build prompt templates with clear versioning, A/B testing infrastructure, and rollback capabilities. Implement prompt injection detection and sanitization. Document your prompt design decisions—future team members (and auditors) will thank you. Treat prompts as code: review them, test them, and deploy them through your CI/CD pipeline.",
+        },
+        {
+          heading: "Handling Sensitive Data",
+          content: "Federal data classification requirements demand careful attention. Implement data sanitization pipelines that strip PII before LLM processing. Consider on-premise model deployment for sensitive workloads. Build audit logs that track what data touched which models. When in doubt, err on the side of caution—the cost of a data spillage far exceeds the inconvenience of additional safeguards.",
+        },
+        {
+          heading: "Reliability and Fallback Strategies",
+          content: "LLM APIs fail. Models hallucinate. Build your systems with graceful degradation in mind. Implement circuit breakers that fall back to simpler heuristics when LLM services are unavailable. Cache common responses to reduce latency and improve availability. Monitor output quality continuously—a model that's technically 'up' but producing garbage is worse than one that's honestly down.",
+        },
+        {
+          heading: "Cost Management and Optimization",
+          content: "LLM inference costs can explode quickly at scale. Implement token-aware routing that directs simple queries to cheaper models. Batch requests where latency permits. Cache embeddings and common completions. Track cost per request type and set alerting thresholds. The difference between a sustainable deployment and a budget-busting one often comes down to these optimizations.",
+        },
+      ],
+      conclusion: "Production LLM deployments in federal environments require balancing innovation with operational rigor. The patterns that work in startups don't always translate to environments with strict compliance requirements. Build incrementally, measure obsessively, and never sacrifice security for convenience.",
+    },
+    tags: ["LLM", "production", "federal", "architecture", "DevOps"],
+  },
+  {
+    id: "TECH003",
+    title: "Penetration Testing AI Systems: Beyond Traditional Security",
+    subtitle: "New attack surfaces require new defensive strategies",
+    category: "Tech",
+    date: "Mar 15, 2025",
+    readTime: "9 min",
+    image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1920&q=80",
+    author: {
+      name: "Inga Kaltak",
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80",
+      bio: "AI Policy Researcher & Applied AI Engineer",
+    },
+    content: {
+      introduction: "Traditional penetration testing methodologies weren't designed for AI systems. After conducting 12+ authorized assessments across DIA and contractor networks, it's clear that AI introduces novel attack surfaces that demand specialized approaches. Here's what security teams need to know.",
+      sections: [
+        {
+          heading: "Model Extraction Attacks",
+          content: "Adversaries can reconstruct your model's behavior through carefully crafted queries. Test your systems by attempting to extract training data or replicate model outputs through API probing. Implement rate limiting, query pattern detection, and output perturbation to make extraction economically infeasible. Monitor for unusual query patterns that might indicate extraction attempts.",
+        },
+        {
+          heading: "Prompt Injection Vulnerabilities",
+          content: "Prompt injection is the SQL injection of the AI era. Test your LLM-integrated systems by attempting to override system prompts, exfiltrate training data, or manipulate outputs. Implement robust input sanitization, output filtering, and privilege separation. Never trust user input that will be concatenated with system prompts—assume it's adversarial.",
+        },
+        {
+          heading: "Data Poisoning Assessment",
+          content: "If adversaries can influence your training data, they can influence your model's behavior. Assess the security of your data pipelines from source to training. Implement data provenance tracking and anomaly detection on training datasets. Consider adversarial training to improve model robustness against poisoned inputs. The supply chain of AI extends back to every data source.",
+        },
+        {
+          heading: "Adversarial Input Testing",
+          content: "Small perturbations to inputs can cause dramatic changes in model outputs. Test your models with adversarially crafted inputs designed to trigger misclassifications or unexpected behaviors. For safety-critical applications, implement ensemble methods and input validation to detect adversarial examples. Don't assume that because an attack isn't obvious to humans, it won't fool your model.",
+        },
+        {
+          heading: "Building AI-Aware Security Programs",
+          content: "Traditional security teams often lack AI expertise, while AI teams lack security expertise. Bridge this gap by training security professionals on AI fundamentals and AI engineers on security best practices. Incorporate AI-specific tests into your existing penetration testing methodology. Build threat models that account for AI-specific attack vectors alongside traditional infrastructure threats.",
+        },
+      ],
+      conclusion: "AI security is still an emerging discipline, but the attacks are already here. Organizations deploying AI systems in adversarial environments—which includes virtually every federal agency—must adapt their security programs to address these novel threats. The 47 critical vulnerabilities we discovered across our assessments underscore that AI security cannot be an afterthought.",
+    },
+    tags: ["cybersecurity", "penetration testing", "AI security", "adversarial ML"],
+  },
 ];
 
 export function getArticleById(id: string): Article | undefined {
