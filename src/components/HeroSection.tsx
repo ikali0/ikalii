@@ -1,6 +1,7 @@
 import { Instagram, Linkedin, ArrowRight } from "lucide-react";
+import { memo } from "react";
 
-const HeroSection = () => {
+const HeroSection = memo(() => {
   return (
     <section className="relative rounded-2xl overflow-hidden my-6 md:my-12 animate-fade-in">
       <div className="flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-10 p-6 sm:p-8 md:p-12 glass-dark border border-slate-700/50">
@@ -67,6 +68,8 @@ const HeroSection = () => {
       </div>
     </section>
   );
-};
+});
+
+HeroSection.displayName = "HeroSection";
 
 export default HeroSection;
