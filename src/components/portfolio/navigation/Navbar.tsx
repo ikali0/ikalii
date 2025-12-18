@@ -45,7 +45,7 @@ const Navbar: React.FC<Props> = ({ activeSection, scrolled, onNavigate }) => {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    if (!isMenuOpen || !mobileMenuRef.current) return;
+    if (!isMenuOpen || !mobileMenuRef.current) {return;}
 
     const focusableElements = mobileMenuRef.current.querySelectorAll<HTMLElement>(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -54,7 +54,7 @@ const Navbar: React.FC<Props> = ({ activeSection, scrolled, onNavigate }) => {
     const lastElement = focusableElements[focusableElements.length - 1];
 
     const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
+      if (e.key !== "Tab") {return;}
       if (e.shiftKey && document.activeElement === firstElement) {
         e.preventDefault();
         lastElement?.focus();

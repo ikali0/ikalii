@@ -77,7 +77,7 @@ export async function streamChat({ messages, onDelta, onDone, signal }: StreamCh
   try {
     while (!isStreamDone) {
       const { done, value } = await reader.read();
-      if (done) break;
+      if (done) {break;}
 
       buffer += decoder.decode(value, { stream: true });
 
@@ -86,7 +86,7 @@ export async function streamChat({ messages, onDelta, onDone, signal }: StreamCh
         let line = buffer.slice(0, newlineIndex);
         buffer = buffer.slice(newlineIndex + 1);
 
-        if (line.endsWith("\r")) line = line.slice(0, -1);
+        if (line.endsWith("\r")) {line = line.slice(0, -1);}
         if (line.startsWith(":") || line.trim() === "" || !line.startsWith("data: ")) {
           continue; // Skip keep-alive comments, empty lines, or malformed lines
         }
@@ -108,7 +108,7 @@ export async function streamChat({ messages, onDelta, onDone, signal }: StreamCh
             onDelta(deltaContent);
           }
         } catch {
-          buffer = line + "\n" + buffer; // Restore line in case of error
+          buffer = `${line  }\n${  buffer}`; // Restore line in case of error
           break;
         }
       }

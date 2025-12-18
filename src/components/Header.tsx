@@ -50,7 +50,7 @@ const Header = () => {
   ];
 
   const isActive = (href: string) => {
-    if (href === "/") return location.pathname === "/" || location.pathname === "/blog";
+    if (href === "/") {return location.pathname === "/" || location.pathname === "/blog";}
     return location.pathname === href;
   };
 

@@ -67,7 +67,7 @@ const Chat = () => {
 
   const send = useCallback(async () => {
     const trimmed = input.trim();
-    if (!trimmed || isStreaming || !user) return;
+    if (!trimmed || isStreaming || !user) {return;}
 
     const userMsg: ChatMessage = { role: "user", content: trimmed };
     setInput("");
@@ -181,10 +181,10 @@ const Chat = () => {
                     <div key={`${m.role}-${idx}`} className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
                       <div
                         className={
-                          "max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed border " +
-                          (isUser
+                          `max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed border ${ 
+                          isUser
                             ? "bg-primary text-primary-foreground border-primary/40"
-                            : "bg-muted text-foreground border-border")
+                            : "bg-muted text-foreground border-border"}`
                         }
                         aria-label={isUser ? "Your message" : "Assistant message"}
                       >

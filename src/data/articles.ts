@@ -388,7 +388,7 @@ export function getArticleById(id: string): Article | undefined {
 
 export function getRelatedArticles(currentId: string, limit: number = 3): Article[] {
   const currentArticle = getArticleById(currentId);
-  if (!currentArticle) return articles.slice(0, limit);
+  if (!currentArticle) {return articles.slice(0, limit);}
   
   // Get articles from the same category, excluding current
   const related = articles.filter(

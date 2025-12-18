@@ -45,7 +45,7 @@ export function useFeatureFlags() {
         .from('feature_flags')
         .select('*');
       
-      if (error) throw new Error(error.message);
+      if (error) {throw new Error(error.message);}
       return (data ?? []) as FeatureFlag[];
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
@@ -55,11 +55,11 @@ export function useFeatureFlags() {
   });
 
   const isEnabled = (flagName: string): boolean => {
-    if (!flags) return false;
+    if (!flags) {return false;}
     
     const flag = flags.find(f => f.name === flagName);
-    if (!flag) return false;
-    if (!flag.enabled) return false;
+    if (!flag) {return false;}
+    if (!flag.enabled) {return false;}
 
     // Check if user is in specific user_ids list (beta testers)
     if (userId && flag.user_ids?.includes(userId)) {
@@ -67,8 +67,8 @@ export function useFeatureFlags() {
     }
 
     // Check rollout percentage
-    if (flag.rollout_percentage === 100) return true;
-    if (flag.rollout_percentage === 0) return false;
+    if (flag.rollout_percentage === 100) {return true;}
+    if (flag.rollout_percentage === 0) {return false;}
 
     // Use user ID hash or random for anonymous users
     const userHash = userId ? hashUserId(userId) : Math.random() * 100;
@@ -88,7 +88,7 @@ export function useFeatureFlag(flagName: string): boolean {
   const { isEnabled, isLoading } = useFeatureFlags();
   
   // Default to false while loading to prevent flash of content
-  if (isLoading) return false;
+  if (isLoading) {return false;}
   
   return isEnabled(flagName);
 }

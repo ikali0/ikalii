@@ -21,7 +21,7 @@ type SummaryPayload = {
 
 function extractFirstJsonObject(text: string): { summary?: unknown; bullets?: unknown } | null {
   const match = text.match(/\{[\s\S]*\}/);
-  if (!match) return null;
+  if (!match) {return null;}
   try {
     return JSON.parse(match[0]) as { summary?: unknown; bullets?: unknown };
   } catch {

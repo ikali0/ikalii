@@ -39,7 +39,7 @@ export function ArticleSummaryDialog({ article }: { article: Article }) {
   const [data, setData] = useState<SummaryData | null>(null);
 
   const load = useCallback(async () => {
-    if (data || isLoading) return;
+    if (data || isLoading) {return;}
 
     setIsLoading(true);
     try {
@@ -51,14 +51,14 @@ export function ArticleSummaryDialog({ article }: { article: Article }) {
         },
       });
 
-      if (error) throw error;
-      if (!res || typeof res !== "object") throw new Error("Invalid response");
+      if (error) {throw error;}
+      if (!res || typeof res !== "object") {throw new Error("Invalid response");}
 
       const summary = (res as { summary?: unknown }).summary;
       const bullets = (res as { bullets?: unknown }).bullets;
       const cached = (res as { cached?: unknown }).cached;
 
-      if (typeof summary !== "string") throw new Error("Invalid summary");
+      if (typeof summary !== "string") {throw new Error("Invalid summary");}
 
       setData({
         summary,
@@ -76,7 +76,7 @@ export function ArticleSummaryDialog({ article }: { article: Article }) {
   const onOpenChange = useCallback(
     (next: boolean) => {
       setOpen(next);
-      if (next) void load();
+      if (next) {void load();}
     },
     [load],
   );

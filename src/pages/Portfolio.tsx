@@ -37,7 +37,7 @@ const Portfolio: React.FC = () => {
 
   const scrollToSection = useCallback((id: string) => {
     const el = document.getElementById(id);
-    if (!el) return;
+    if (!el) {return;}
 
     const y = el.getBoundingClientRect().top + window.scrollY - 72;
     window.scrollTo({ top: y, behavior: 'smooth' });

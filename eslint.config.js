@@ -2,28 +2,29 @@ import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
-import tseslint from "@typescript-eslint/eslint-plugin";
-import { parse } from "@typescript-eslint/parser";
+import tseslint from "typescript-eslint";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default tseslint.config(
   { ignores: ["dist", "node_modules", "*.config.js", "*.config.ts"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
-    parser: "@typescript-eslint/parser",
-    parserOptions: {
-      project: "./tsconfig.json", // Added for type-aware rules
-      tsconfigRootDir: __dirname,
-      ecmaVersion: 2020,
-      sourceType: "module", // Ensures ES6+ imports are configured
-    },
     languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: "module",
+      },
       globals: globals.browser,
     },
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
-      "@typescript-eslint": tseslint,
+      "@typescript-eslint": tseslint.plugin,
     },
     rules: {
       // === React Hooks - Federal-grade strictness ===
@@ -38,7 +39,6 @@ export default tseslint.config(
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
       "@typescript-eslint/no-non-null-assertion": "warn",
-      "@typescript-eslint/prefer-optional-chain": "warn",
 
       // === Security hardening ===
       "no-eval": "error",

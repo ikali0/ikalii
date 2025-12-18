@@ -183,7 +183,7 @@ serve(async (req: Request) => {
     // Validate and sanitize messages with length limits
     const safeMessages: ClientMessage[] = messages
       .filter((m): m is ClientMessage => {
-        if (!m || typeof m !== "object") return false;
+        if (!m || typeof m !== "object") {return false;}
         const role = (m as { role?: unknown }).role;
         const content = (m as { content?: unknown }).content;
         return (
