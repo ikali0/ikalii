@@ -6,11 +6,11 @@ export default {
   prefix: "",
   theme: {
   	screens: {
-  		'xs': '375px',
-  		'sm': '640px',
-  		'md': '768px',
-  		'lg': '1024px',
-  		'xl': '1280px',
+  		xs: '375px',
+  		sm: '640px',
+  		md: '768px',
+  		lg: '1024px',
+  		xl: '1280px',
   		'2xl': '1536px'
   	},
   	container: {
@@ -23,7 +23,7 @@ export default {
   	extend: {
   		fontFamily: {
   			sans: [
-  				'Inter',
+  				'Montserrat',
   				'ui-sans-serif',
   				'system-ui',
   				'sans-serif',
@@ -33,7 +33,7 @@ export default {
   				'Noto Color Emoji'
   			],
   			serif: [
-  				'EB Garamond',
+  				'Libre Baskerville',
   				'ui-serif',
   				'Georgia',
   				'Cambria',
@@ -42,7 +42,7 @@ export default {
   				'serif'
   			],
   			mono: [
-  				'IBM Plex Mono',
+  				'Source Code Pro',
   				'ui-monospace',
   				'SFMono-Regular',
   				'Menlo',
