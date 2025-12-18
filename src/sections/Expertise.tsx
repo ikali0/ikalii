@@ -5,45 +5,45 @@ import SkillCard from '@/components/portfolio/ui/SkillCard';
 
 const Expertise: React.FC = () => {
   return (
-    <section id="expertise" className="py-20 md:py-24 px-4 sm:px-6">
-      <div className="max-w-7xl mx-auto">
+    <section id="expertise" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto">
         <SectionTitle
-          title="Core Competencies"
-          subtitle="A hybrid skillset designed for modern federal challenges, combining technical engineering with regulatory expertise."
+          title="What I Build"
+          subtitle="Outcome-oriented capabilities for regulated environments."
         />
 
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
           <SkillCard
-            title="AI & Machine Learning"
+            title="AI Systems That Ship"
             icon={Brain}
             color="cyan"
             items={[
-              'Open-source LLMs (Llama, Mistral)',
-              'Prompt Engineering (GPT-4, Claude)',
-              'Infrastructure Optimization',
-              'Virtual Support Bots',
+              'RAG pipelines that pass audit pressure',
+              'Open-source LLMs (Llama, Mistral) — 40% cost cuts',
+              'Policy summarization & extraction tools',
+              'Local-first, air-gapped deployments',
             ]}
           />
           <SkillCard
-            title="Policy & Governance"
+            title="Policy → Controls"
             icon={FileText}
             color="blue"
             items={[
-              'NIST AI RMF Assessments',
-              'FERPA / Title IX Compliance',
-              'Federal Procurement',
-              'Change Management Policies',
+              'NIST AI RMF assessments & mapping',
+              'FERPA / Title IX compliance automation',
+              'Federal procurement documentation',
+              'Risk frameworks to measurable controls',
             ]}
           />
           <SkillCard
-            title="Security & Analytics"
+            title="Security Posture"
             icon={Shield}
             color="purple"
             items={[
-              'Penetration Testing (Metasploit)',
-              'Vulnerability Remediation',
-              'OSINT Reconnaissance',
-              'Quantitative Analytics',
+              'Authorized pen testing (12+ assessments)',
+              'Threat modeling & least privilege design',
+              'Vulnerability remediation roadmaps',
+              'OSINT & adversarial input testing',
             ]}
           />
         </div>
