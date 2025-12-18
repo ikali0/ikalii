@@ -43,7 +43,7 @@ jobs:
         run: bun install
 
       - name: 🔐 Run ESLint (Code Quality Audit)
-        run: bun run lint
+        run: npm run lint
         continue-on-error: false
 
       - name: 🔒 Run Type Check (TypeScript Audit)
