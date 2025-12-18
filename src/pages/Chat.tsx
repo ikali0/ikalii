@@ -38,12 +38,19 @@ const Chat = () => {
       setIsAuthLoading(false);
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setIsAuthLoading(false);
-    });
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        setUser(session?.user ?? null);
+        setIsAuthLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to get session:", err);
+        setIsAuthLoading(false);
+      });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {

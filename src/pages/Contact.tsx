@@ -48,7 +48,7 @@ const Contact = () => {
     return result.success ? undefined : result.error.errors[0]?.message;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrors({});
@@ -69,12 +69,27 @@ const Contact = () => {
       return;
     }
 
-    // Simulate form submission (replace with actual API call)
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const error = await response.text().catch(() => 'Failed to send email');
+        throw new Error(error || `HTTP ${response.status}`);
+      }
+
       toast.success("Message sent! We'll get back to you soon.");
       setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to send message';
+      console.error('Contact form submission error:', message);
+      toast.error(message);
+    } finally {
       setIsSubmitting(false);
-    }, 500);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

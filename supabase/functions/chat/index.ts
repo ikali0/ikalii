@@ -38,8 +38,8 @@ async function checkRateLimit(
     .eq("endpoint", endpoint)
     .maybeSingle();
 
-  if (selectError) {
-    console.error("Rate limit select error:", selectError);
+  if (selectError && selectError.code !== 'PGRST116') {
+    console.error("Rate limit select error:", selectError.code);
     // Allow request on error to avoid blocking users due to DB issues
     return { allowed: true, remaining: MAX_REQUESTS };
   }
@@ -55,8 +55,8 @@ async function checkRateLimit(
       window_start: now.toISOString(),
     });
 
-    if (insertError) {
-      console.error("Rate limit insert error:", insertError);
+    if (insertError && insertError.code !== '23505') {
+      console.error("Rate limit insert error:", insertError.code);
     }
     return { allowed: true, remaining: MAX_REQUESTS - 1 };
   }
@@ -213,8 +213,6 @@ serve(async (req: Request) => {
 
     const systemPrompt =
       "You are a helpful AI assistant. Be concise, accurate, and avoid requesting sensitive personal data.";
-
-    console.log("Processing chat request for user:", authResult.userId, "messages:", safeMessages.length);
 
     const upstream = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

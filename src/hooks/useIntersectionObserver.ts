@@ -55,7 +55,9 @@ export function useIntersectionObserver(
     });
 
     return () => {
-      observer.disconnect();
+      if (observer) {
+        observer.disconnect();
+      }
     };
   }, [sections, options?.rootMargin, options?.threshold]);
 
